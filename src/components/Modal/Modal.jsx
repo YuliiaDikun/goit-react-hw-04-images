@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 import { useEffect } from 'react';
 
-export const Modal = ({ onImageClick, largeImgUrl }) => {
+export const Modal = ({ onImageClick, largeImgUrl, setIsModalOpen, nodeRef }) => {
   useEffect(() => {  
     const handleKeyDown = e => {           
       if (e.key === 'Escape') {
@@ -20,9 +20,9 @@ export const Modal = ({ onImageClick, largeImgUrl }) => {
     }
   };  
   return (
-    <div className={css.Overlay} onClick={handleBackdrop}>
+    <div className={css.Overlay} onClick={handleBackdrop} ref={nodeRef}>
       <div className={css.Modal}>
-        <img src={largeImgUrl} alt="" />
+        <img src={largeImgUrl} alt="" />        
       </div>
     </div>
   );

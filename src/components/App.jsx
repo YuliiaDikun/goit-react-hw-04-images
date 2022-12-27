@@ -18,7 +18,7 @@ export const App = () => {
   const [error, setError] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!query) {
@@ -53,9 +53,9 @@ export const App = () => {
   };
   const onImageClick = largeImg => {
     setLargeImgUrl(largeImg);
+    setIsModalOpen(prevState => !prevState);
   };
-  const hasLargeImgUrl = largeImgUrl.length > 0;
-  console.log(hasLargeImgUrl);
+
   const nodeRef = useRef(null);
   return (
     <>
@@ -71,18 +71,16 @@ export const App = () => {
 
       <CSSTransition
         nodeRef={nodeRef}
-        in={hasLargeImgUrl}
-        timeout={500}
+        in={isModalOpen}
+        timeout={2500}
         classNames="alert"
         unmountOnExit
       >
-        <div ref={nodeRef}>
-          <Modal            
-            largeImgUrl={largeImgUrl}
-            onImageClick={onImageClick} />
-        </div>
+        <Modal nodeRef={nodeRef}
+          largeImgUrl={largeImgUrl}
+          onImageClick={onImageClick}
+          setIsModalOpen={setIsModalOpen} />
       </CSSTransition>
-
     </>
   );
 }
