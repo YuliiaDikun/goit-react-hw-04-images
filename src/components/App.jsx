@@ -1,11 +1,13 @@
+import { CSSTransition } from 'react-transition-group';
 import { getImages } from './service/API';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
+import '../index.css';
 
 export const App = () => {
   const [query, setQuery] = useState('');
@@ -17,23 +19,24 @@ export const App = () => {
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-useEffect(() => {
-  if (!query) {
-    return;
-  }
-  setIsLoading(true);
-      getImages(query, page)
-        .then(({ hits, total, totalHits }) => {
-          if (hits.length === 0) {
-            setIsEmpty(true);
-            return;
-          }
-          setImages(prevState => [...prevState, ...hits]);
-          setShowBtn(page < Math.ceil(totalHits / 12));         
-        })
-        .catch(error => setError(error.message))
-        .finally(() => setIsLoading(false));
-},[query, page]);
+
+  useEffect(() => {
+    if (!query) {
+      return;
+    }
+    setIsLoading(true);
+    getImages(query, page)
+      .then(({ hits, total, totalHits }) => {
+        if (hits.length === 0) {
+          setIsEmpty(true);
+          return;
+        }
+        setImages(prevState => [...prevState, ...hits]);
+        setShowBtn(page < Math.ceil(totalHits / 12));
+      })
+      .catch(error => setError(error.message))
+      .finally(() => setIsLoading(false));
+  }, [query, page]);
 
   const onFormSubmit = query => {
     setQuery(query);
@@ -52,6 +55,8 @@ useEffect(() => {
     setLargeImgUrl(largeImg);
   };
   const hasLargeImgUrl = largeImgUrl.length > 0;
+  console.log(hasLargeImgUrl);
+  const nodeRef = useRef(null);
   return (
     <>
       <Searchbar onFormSubmit={onFormSubmit} />
@@ -63,9 +68,21 @@ useEffect(() => {
       )}
 
       {showBtn && <Button onBtnClick={onBtnClick} />}
-      {hasLargeImgUrl && (
-        <Modal largeImgUrl={largeImgUrl} onImageClick={onImageClick} />
-      )}
+
+      <CSSTransition
+        nodeRef={nodeRef}
+        in={hasLargeImgUrl}
+        timeout={500}
+        classNames="alert"
+        unmountOnExit
+      >
+        <div ref={nodeRef}>
+          <Modal            
+            largeImgUrl={largeImgUrl}
+            onImageClick={onImageClick} />
+        </div>
+      </CSSTransition>
+
     </>
   );
 }
