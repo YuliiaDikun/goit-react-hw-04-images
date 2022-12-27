@@ -53,7 +53,7 @@ export const App = () => {
   };
   const onImageClick = largeImg => {
     setLargeImgUrl(largeImg);
-    setIsModalOpen(prevState => !prevState);
+    setIsModalOpen(true);
   };
 
   const nodeRef = useRef(null);
@@ -76,7 +76,8 @@ export const App = () => {
         classNames="alert"
         unmountOnExit
       >
-        <Modal nodeRef={nodeRef}
+        <Modal
+          nodeRef={nodeRef}
           largeImgUrl={largeImgUrl}
           onImageClick={onImageClick}
           setIsModalOpen={setIsModalOpen} />

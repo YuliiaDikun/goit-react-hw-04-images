@@ -8,15 +8,17 @@ export const Modal = ({ onImageClick, largeImgUrl, setIsModalOpen, nodeRef }) =>
     const handleKeyDown = e => {           
       if (e.key === 'Escape') {
         onImageClick('');
+        setIsModalOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onImageClick]);
+  }, [onImageClick, setIsModalOpen]);
   
   const handleBackdrop = event => {
     if (event.target === event.currentTarget) {
       onImageClick('');
+      setIsModalOpen(false);
     }
   };  
   return (
